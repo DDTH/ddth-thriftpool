@@ -69,30 +69,10 @@
 			<version>3.3.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${version.guava}</version>
 		</dependency>
-
-		<!-- <dependency> <groupId>com.github.ddth</groupId> <artifactId>ddth-commons</artifactId> 
-			<version>0.3.0.5</version> </dependency> <dependency> <groupId>com.github.ddth</groupId> 
-			<artifactId>ddth-cache-adapter</artifactId> <version>0.2.0.2</version> </dependency> 
-			<dependency> <groupId>com.github.ddth</groupId> <artifactId>ddth-cql-utils</artifactId> 
-			<version>0.2.0.1</version> </dependency> <dependency> <groupId>org.apache.commons</groupId> 
-			<artifactId>commons-lang3</artifactId> <version>3.3.2</version> </dependency> 
-			<dependency> <groupId>org.springframework</groupId> <artifactId>spring-jdbc</artifactId> 
-			<version>3.2.4.RELEASE</version> </dependency> <dependency> <groupId>com.fasterxml.jackson.core</groupId> 
-			<artifactId>jackson-core</artifactId> <version>${version.jackson}</version> 
-			<optional>true</optional> </dependency> <dependency> <groupId>com.fasterxml.jackson.core</groupId> 
-			<artifactId>jackson-databind</artifactId> <version>${version.jackson}</version> 
-			<optional>true</optional> </dependency> <dependency> <groupId>com.fasterxml.jackson.core</groupId> 
-			<artifactId>jackson-annotations</artifactId> <version>${version.jackson}</version> 
-			<optional>true</optional> </dependency> -->
 	</dependencies>
 
 	<build>
