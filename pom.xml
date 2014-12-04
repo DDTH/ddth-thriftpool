@@ -1,0 +1,145 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.ddth</groupId>
+		<artifactId>ddth-parent</artifactId>
+		<version>2</version>
+	</parent>
+
+	<groupId>com.github.ddth</groupId>
+	<artifactId>ddth-thriftpool</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+
+	<name>ddth-thriftpool</name>
+	<description>DDTH's Thrift Client Pooling Support Library</description>
+	<url>https://github.com/DDTH/ddth-thriftpool</url>
+
+	<!-- <licenses> <license> <name>The MIT License (MIT)</name> <url>http://opensource.org/licenses/MIT</url> 
+		<distribution>repo</distribution> </license> </licenses> <developers> <developer> 
+		<id>btnguyen2k</id> <name>Thanh Ba Nguyen</name> <email>btnguyen2k@gmail.com</email> 
+		</developer> </developers> -->
+
+	<scm>
+		<url>git@github.com:DDTH/ddth-thriftpool</url>
+		<connection>scm:git:git@github.com:DDTH/ddth-thriftpool</connection>
+		<developerConnection>scm:git:git@github.com:DDTH/ddth-thriftpool</developerConnection>
+	</scm>
+
+	<properties>
+		<skipTests>false</skipTests>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${version.junit}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.7</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.thrift</groupId>
+			<artifactId>libthrift</artifactId>
+			<version>0.9.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${version.guava}</version>
+		</dependency>
+
+		<!-- <dependency> <groupId>com.github.ddth</groupId> <artifactId>ddth-commons</artifactId> 
+			<version>0.3.0.5</version> </dependency> <dependency> <groupId>com.github.ddth</groupId> 
+			<artifactId>ddth-cache-adapter</artifactId> <version>0.2.0.2</version> </dependency> 
+			<dependency> <groupId>com.github.ddth</groupId> <artifactId>ddth-cql-utils</artifactId> 
+			<version>0.2.0.1</version> </dependency> <dependency> <groupId>org.apache.commons</groupId> 
+			<artifactId>commons-lang3</artifactId> <version>3.3.2</version> </dependency> 
+			<dependency> <groupId>org.springframework</groupId> <artifactId>spring-jdbc</artifactId> 
+			<version>3.2.4.RELEASE</version> </dependency> <dependency> <groupId>com.fasterxml.jackson.core</groupId> 
+			<artifactId>jackson-core</artifactId> <version>${version.jackson}</version> 
+			<optional>true</optional> </dependency> <dependency> <groupId>com.fasterxml.jackson.core</groupId> 
+			<artifactId>jackson-databind</artifactId> <version>${version.jackson}</version> 
+			<optional>true</optional> </dependency> <dependency> <groupId>com.fasterxml.jackson.core</groupId> 
+			<artifactId>jackson-annotations</artifactId> <version>${version.jackson}</version> 
+			<optional>true</optional> </dependency> -->
+	</dependencies>
+
+	<build>
+		<plugins><!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-compiler-plugin</artifactId> 
+				<version>3.1</version> <configuration> <source>${version.java}</source> <target>${version.java}</target> 
+				</configuration> </plugin> -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<forkMode>always</forkMode>
+					<skipTests>${skipTests}</skipTests>
+					<systemPropertyVariables>
+						<log4j.configuration>file:${basedir}/etc/log4j.xml</log4j.configuration>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<!-- <Bundle-Activator></Bundle-Activator> -->
+						<Export-Package>com.github.ddth.thriftpool</Export-Package>
+						<!-- <Import-Package>com.google.common.*;version="${version.guava}",*</Import-Package> -->
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>distro-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>assembly/ddth-thriftpool-withdeps.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
