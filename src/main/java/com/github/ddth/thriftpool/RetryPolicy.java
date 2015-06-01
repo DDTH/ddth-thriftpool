@@ -8,11 +8,19 @@ package com.github.ddth.thriftpool;
  */
 public class RetryPolicy implements Cloneable {
 
-    public static RetryPolicy DEFAULT = new RetryPolicy(3, 1000);
+    /**
+     * @since 0.2.0
+     */
+    public enum RetryType {
+        ROUND_ROBIN, RANDOM
+    }
+
+    public static RetryPolicy DEFAULT = new RetryPolicy(3, 1000, RetryType.ROUND_ROBIN);
 
     private int counter = 0;
     private int numRetries = 3;
     private long sleepMsBetweenRetries = 1000;
+    private RetryType retryType = RetryType.ROUND_ROBIN;
 
     public RetryPolicy() {
     }
@@ -20,6 +28,12 @@ public class RetryPolicy implements Cloneable {
     public RetryPolicy(int numRetries, long sleepMsBetweenRetries) {
         this.numRetries = numRetries;
         this.sleepMsBetweenRetries = sleepMsBetweenRetries;
+    }
+
+    public RetryPolicy(int numRetries, long sleepMsBetweenRetries, RetryType retryType) {
+        this.numRetries = numRetries;
+        this.sleepMsBetweenRetries = sleepMsBetweenRetries;
+        this.retryType = retryType;
     }
 
     public int getNumRetries() {
@@ -37,6 +51,15 @@ public class RetryPolicy implements Cloneable {
 
     public RetryPolicy setSleepMsBetweenRetries(long sleepMsBetweenRetries) {
         this.sleepMsBetweenRetries = sleepMsBetweenRetries;
+        return this;
+    }
+
+    public RetryType getRetryType() {
+        return retryType;
+    }
+
+    public RetryPolicy setRetryType(RetryType retryType) {
+        this.retryType = retryType;
         return this;
     }
 

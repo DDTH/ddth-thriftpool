@@ -9,6 +9,7 @@ import org.apache.thrift.transport.TTransport;
 import scribe.thrift.scribe;
 
 import com.github.ddth.thriftpool.ITProtocolFactory;
+import com.github.ddth.thriftpool.PoolConfig;
 import com.github.ddth.thriftpool.ThriftClientPool;
 
 public class QndScribeClient {
@@ -20,7 +21,7 @@ public class QndScribeClient {
     public static void main(String[] args) throws Exception {
         ITProtocolFactory protocolFactory = new ITProtocolFactory() {
             @Override
-            public TProtocol create() {
+            public TProtocol create(int hash) {
                 TTransport transport = new TFramedTransport(new TSocket(SCRIBE_HOST, SCRIBE_PORT));
                 TProtocol protocol = new TBinaryProtocol(transport);
                 return protocol;
@@ -28,7 +29,10 @@ public class QndScribeClient {
         };
 
         ThriftClientPool<scribe.Client, scribe.Iface> pool = new ThriftClientPool<scribe.Client, scribe.Iface>();
-        pool.setClientClass(scribe.Client.class).setClientInterface(scribe.Iface.class);
+        PoolConfig poolConfig = new PoolConfig();
+        poolConfig.setMaxActive(1).setMaxIdle(0).setMinIdle(0);
+        pool.setClientClass(scribe.Client.class).setClientInterface(scribe.Iface.class)
+                .setPoolConfig(poolConfig);
         pool.setTProtocolFactory(protocolFactory);
         pool.init();
 
