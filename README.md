@@ -50,7 +50,7 @@ ITProtocolFactory protocolFactory = new ITProtocolFactory() {
 };
 
 // setup a TProtocol Factory, method 2: extends AbstractTProtocolFactory class
-ITProtocolFactory protocolFactory = new AbstractTProtocolFactory() {
+ITProtocolFactory protocolFactory = new AbstractTProtocolFactory("host1:port1,host2:port2,host3:port3") {
     @Override
     public TProtocol create(HostAndPort hostAndPort) {
         TTransport transport = new TFramedTransport(new TSocket(hostAndPort.host, hostAndPort.port));
