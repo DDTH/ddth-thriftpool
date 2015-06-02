@@ -75,7 +75,7 @@ public abstract class AbstractTProtocolFactory implements ITProtocolFactory {
      * {@inheritDoc}
      */
     @Override
-    public TProtocol create(int hash) {
+    public TProtocol create(int hash) throws Exception {
         return create(getHostAndPort(hash));
     }
 
@@ -84,6 +84,7 @@ public abstract class AbstractTProtocolFactory implements ITProtocolFactory {
      * 
      * @param hostAndPort
      * @return
+     * @throws Exception
      */
-    protected abstract TProtocol create(HostAndPort hostAndPort);
+    protected abstract TProtocol create(HostAndPort hostAndPort) throws Exception;
 }
