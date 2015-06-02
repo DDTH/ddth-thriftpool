@@ -18,7 +18,8 @@ public interface ITProtocolFactory {
      *            determine which server to connect to
      * @return
      * @since 0.2.0
+     * @throws Exception
      */
-    public TProtocol create(int hash);
+    public TProtocol create(int hash) throws Exception;
 
 }

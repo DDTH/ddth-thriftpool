@@ -287,20 +287,15 @@ public class ThriftClientPool<T extends TServiceClient, I> {
          * 
          * @param hash
          * @return
-         * @throws NoSuchMethodException
-         * @throws IllegalAccessException
-         * @throws InvocationTargetException
-         * @throws InstantiationException
+         * @throws Exception
          */
-        private T newClientObj(int hash) throws NoSuchMethodException, IllegalAccessException,
-                InvocationTargetException, InstantiationException {
+        private T newClientObj(int hash) throws Exception {
             TProtocol protocol = tprotocolFactory.create(hash);
             T clientObj = ConstructorUtils.invokeConstructor(clientClass, protocol);
             return clientObj;
         }
 
-        private T getClientId(boolean renew, int hash) throws NoSuchMethodException,
-                IllegalAccessException, InvocationTargetException, InstantiationException {
+        private T getClientId(boolean renew, int hash) throws Exception {
             if (clientObj == null || renew) {
                 if (clientObj != null) {
                     try {

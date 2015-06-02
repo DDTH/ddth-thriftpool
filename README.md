@@ -20,7 +20,7 @@ Third party libraries are distributed under their own license(s).
 
 ## Installation ##
 
-Latest release version: `0.2.0`. See [RELEASE-NOTES.md](RELEASE-NOTES.md).
+Latest release version: `0.2.1`. See [RELEASE-NOTES.md](RELEASE-NOTES.md).
 
 Maven dependency:
 
@@ -28,7 +28,7 @@ Maven dependency:
 <dependency>
 	<groupId>com.github.ddth</groupId>
 	<artifactId>ddth-thriftpool</artifactId>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 </dependency>
 ```
 
@@ -42,8 +42,14 @@ import com.github.ddth.thriftpool.ITProtocolFactory;
 // setup a TProtocol Factory, method 1: implement ITProtocolFactory interface
 ITProtocolFactory protocolFactory = new ITProtocolFactory() {
     @Override
-    public TProtocol create(int hash) {
+    public TProtocol create(int hash) throws Exception {
         TTransport transport = new TFramedTransport(new TSocket(SCRIBE_HOST, SCRIBE_PORT));
+        try {
+            transport.open();
+        } catch (TTransportException e) {
+            //transport.close();
+            throw e;
+        }
         TProtocol protocol = new TBinaryProtocol(transport);
         return protocol;
     }
@@ -52,8 +58,14 @@ ITProtocolFactory protocolFactory = new ITProtocolFactory() {
 // setup a TProtocol Factory, method 2: extends AbstractTProtocolFactory class
 ITProtocolFactory protocolFactory = new AbstractTProtocolFactory("host1:port1,host2:port2,host3:port3") {
     @Override
-    public TProtocol create(HostAndPort hostAndPort) {
+    public TProtocol create(HostAndPort hostAndPort) throws Exception {
         TTransport transport = new TFramedTransport(new TSocket(hostAndPort.host, hostAndPort.port));
+        try {
+            transport.open();
+        } catch (TTransportException e) {
+            //transport.close();
+            throw e;
+        }
         TProtocol protocol = new TBinaryProtocol(transport);
         return protocol;
     }
