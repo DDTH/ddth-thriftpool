@@ -13,9 +13,22 @@ import org.apache.thrift.protocol.TProtocol;
  */
 public abstract class AbstractTProtocolFactory implements ITProtocolFactory {
 
-    protected static class HostAndPort {
+    public static class HostAndPort {
         public String host;
         public int port;
+
+        public HostAndPort() {
+        }
+
+        public HostAndPort(String host, int port) {
+            this.host = host;
+            this.port = port;
+        }
+
+        public HostAndPort(String url) {
+            this.host = url;
+            this.port = 0;
+        }
     }
 
     private List<HostAndPort> hostAndPortList = new ArrayList<HostAndPort>();
