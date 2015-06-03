@@ -47,6 +47,32 @@ public abstract class AbstractTProtocolFactory implements ITProtocolFactory {
         return this;
     }
 
+    /**
+     * @return
+     * @since 0.2.1.2
+     */
+    protected AbstractTProtocolFactory clearHostAndPortList() {
+        this.hostAndPortList.clear();
+        return this;
+    }
+
+    /**
+     * @param hostAndPort
+     * @since 0.2.1.2
+     */
+    protected AbstractTProtocolFactory addHostAndPort(HostAndPort hostAndPort) {
+        this.hostAndPortList.add(hostAndPort);
+        return this;
+    }
+
+    /**
+     * @return
+     * @since 0.2.1.2
+     */
+    protected List<HostAndPort> getHostAndPortList() {
+        return this.hostAndPortList;
+    }
+
     protected void parseHostAndPortList() {
         String[] hostAndPortTokens = hostsAndPorts.split("[,\\s]+");
 
@@ -60,7 +86,7 @@ public abstract class AbstractTProtocolFactory implements ITProtocolFactory {
             } catch (Exception e) {
                 hap.port = 0;
             }
-            this.hostAndPortList.add(hap);
+            addHostAndPort(hap);
         }
     }
 
