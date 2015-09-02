@@ -50,6 +50,14 @@ public abstract class AbstractTProtocolFactory implements ITProtocolFactory {
         setHostsAndPorts(hostsAndPorts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getNumServers() {
+        return hostAndPortList != null ? hostAndPortList.size() : 0;
+    }
+
     public String getHostsAndPorts() {
         return hostsAndPorts;
     }

@@ -26,6 +26,11 @@ public class QndScribeClient {
                 TProtocol protocol = new TBinaryProtocol(transport);
                 return protocol;
             }
+
+            @Override
+            public int getNumServers() {
+                return 1;
+            }
         };
 
         ThriftClientPool<scribe.Client, scribe.Iface> pool = new ThriftClientPool<scribe.Client, scribe.Iface>();

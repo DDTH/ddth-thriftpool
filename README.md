@@ -20,7 +20,7 @@ Third party libraries are distributed under their own license(s).
 
 ## Installation ##
 
-Latest release version: `0.2.1.3`. See [RELEASE-NOTES.md](RELEASE-NOTES.md).
+Latest release version: `0.2.2`. See [RELEASE-NOTES.md](RELEASE-NOTES.md).
 
 Maven dependency:
 
@@ -28,7 +28,7 @@ Maven dependency:
 <dependency>
 	<groupId>com.github.ddth</groupId>
 	<artifactId>ddth-thriftpool</artifactId>
-	<version>0.2.1.3</version>
+	<version>0.2.2</version>
 </dependency>
 ```
 
@@ -42,7 +42,8 @@ import com.github.ddth.thriftpool.ITProtocolFactory;
 // setup a TProtocol Factory, method 1: implement ITProtocolFactory interface
 ITProtocolFactory protocolFactory = new ITProtocolFactory() {
     @Override
-    public TProtocol create(int hash) throws Exception {
+    public TProtocol create(int serverIndexHash) throws Exception {
+        //since we have only one server, serverIndexHash is not used
         TTransport transport = new TFramedTransport(new TSocket(SCRIBE_HOST, SCRIBE_PORT));
         try {
             transport.open();
@@ -52,6 +53,11 @@ ITProtocolFactory protocolFactory = new ITProtocolFactory() {
         }
         TProtocol protocol = new TBinaryProtocol(transport);
         return protocol;
+    }
+    
+    @Override
+    public int getNumServers() {
+        return 1;
     }
 };
 

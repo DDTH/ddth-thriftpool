@@ -21,7 +21,6 @@ import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.ddth.thriftpool.RetryPolicy.RetryType;
 import com.google.common.collect.Sets;
 
 /**
@@ -285,17 +284,17 @@ public class ThriftClientPool<T extends TServiceClient, I> {
         /**
          * Creates a new thrift client object.
          * 
-         * @param hash
+         * @param serverIndexHash
          * @return
          * @throws Exception
          */
-        private T newClientObj(int hash) throws Exception {
-            TProtocol protocol = tprotocolFactory.create(hash);
+        private T newClientObj(int serverIndexHash) throws Exception {
+            TProtocol protocol = tprotocolFactory.create(serverIndexHash);
             T clientObj = ConstructorUtils.invokeConstructor(clientClass, protocol);
             return clientObj;
         }
 
-        private T getClientId(boolean renew, int hash) throws Exception {
+        private T getClientId(boolean renew, int serverIndexHash) throws Exception {
             if (clientObj == null || renew) {
                 if (clientObj != null) {
                     try {
@@ -303,7 +302,7 @@ public class ThriftClientPool<T extends TServiceClient, I> {
                     } catch (Exception e) {
                     }
                 }
-                clientObj = newClientObj(hash);
+                clientObj = newClientObj(serverIndexHash);
             }
             return clientObj;
         }
@@ -331,10 +330,39 @@ public class ThriftClientPool<T extends TServiceClient, I> {
                 throws Throwable {
             boolean hasError = false;
             while (!retryPolicy.exceedsMaxRetries()) {
-                int hash = retryPolicy.getRetryType() == RetryType.RANDOM ? random.nextInt(255)
-                        : retryPolicy.getCounter();
+                int serverIndexHash = 0;
+                int numServer = tprotocolFactory.getNumServers();
+
+                switch (retryPolicy.getRetryType()) {
+                case FAILOVER:
+                    serverIndexHash = retryPolicy.getCounter();
+                    break;
+                case ROUND_ROBIN:
+                    if (retryPolicy.getCounter() == 0) {
+                        serverIndexHash = random.nextInt(Short.MAX_VALUE);
+                        if (numServer > 1) {
+                            serverIndexHash = serverIndexHash % numServer;
+                        }
+                    } else {
+                        serverIndexHash = retryPolicy.getLastServerIndexHash() + 1;
+                    }
+                    retryPolicy.setLastServerIndexHash(serverIndexHash);
+                    break;
+                case RANDOM_FAILOVER:
+                    if (retryPolicy.getCounter() == 0 || numServer < 2) {
+                        serverIndexHash = 0;
+                    } else {
+                        serverIndexHash = 1 + (random.nextInt(Short.MAX_VALUE) % (numServer - 1));
+                    }
+                    break;
+                case RANDOM:
+                default:
+                    serverIndexHash = random.nextInt(Short.MAX_VALUE);
+                    break;
+                }
+
                 try {
-                    T clientObj = getClientId(hasError, hash);
+                    T clientObj = getClientId(hasError, serverIndexHash);
                     return method.invoke(clientObj, args);
                 } catch (InvocationTargetException e) {
                     hasError = true;
